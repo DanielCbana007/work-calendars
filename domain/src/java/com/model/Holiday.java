@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -32,7 +32,9 @@ public class Holiday {
 
     @NotNull(message = "Month cannot be null")
     @NotEmpty(message = "Month cannot be empty")
-    private String month;
+    @Min(value = 1, message = "Month must be at least 1")
+    @Max(value = 12, message = "Month must be at most 12")
+    private int month;
 
     private int easterDays;
 

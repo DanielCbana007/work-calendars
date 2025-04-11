@@ -1,7 +1,7 @@
-package application.src.main.java.com.services;
+package com.services;
 
-import com.repositories.CountryRepository;
 import domain.src.java.com.model.Country;
+import src.java.com.repositories.CountryRepository;
 
 import java.util.List;
 import java.util.Optional;
