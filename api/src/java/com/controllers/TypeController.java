@@ -1,6 +1,5 @@
 package api.src.java.com.controllers;
 
-import application.src.main.java.com.services.TypeService;
 import domain.src.java.com.model.Type;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

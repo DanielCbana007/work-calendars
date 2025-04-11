@@ -1,66 +1,48 @@
 package application.src.main.java.com.services;
 
+import com.repositories.CountryRepository;
 import domain.src.java.com.model.Country;
-import infrastructure.src.main.java.com.entities.CountryEntity;
-import infrastructure.src.main.java.com.repositories.CountryEntityRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Service
 public class CountryService {
 
-    private CountryEntityRepository countryEntityRepository;
+    private final CountryRepository countryRepository;
 
-    public Country createCountry(Country country) {
-        CountryEntity countryEntity = mapToEntity(country);
-        countryEntity = countryEntityRepository.save(countryEntity);
-        return mapToModel(countryEntity);
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
     }
 
-    public List<Country> getAllCountries() {
-        List<CountryEntity> countryEntities = countryEntityRepository.findAll();
-        return countryEntities.stream()
-                .map(this::mapToModel)
-                .collect(Collectors.toList());
+    public Country createCountry(Country country) {
+        return countryRepository.save(country);
     }
 
     public Optional<Country> getCountryById(Long id) {
-        Optional<CountryEntity> countryEntity = countryEntityRepository.findById(id);
-        return countryEntity.map(this::mapToModel);
+        return countryRepository.findById(id);
     }
 
-    public Country updateCountry(Long id, Country country) {
-        if (countryEntityRepository.existsById(id)) {
-            CountryEntity countryEntity = mapToEntity(country);
-            countryEntity.setId(id);
-            countryEntity = countryEntityRepository.save(countryEntity);
-            return mapToModel(countryEntity);
+    public List<Country> getAllCountries() {
+        return countryRepository.findAll();
+    }
+
+    public Country updateCountry(Country country) {
+        if (countryRepository.existsById(country.getId())) {
+            return countryRepository.update(country);
+        } else {
+            throw new IllegalArgumentException("Country not found");
         }
-        return null;
     }
 
     public void deleteCountry(Long id) {
-        countryEntityRepository.deleteById(id);
+        if (countryRepository.existsById(id)) {
+            countryRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Country not found");
+        }
     }
 
-    private Country mapToModel(CountryEntity countryEntity) {
-        return new Country(
-                countryEntity.getId(),
-                countryEntity.getName()
-        );
-    }
-
-    private CountryEntity mapToEntity(Country country) {
-        return new CountryEntity(
-                country.getId(),
-                country.getName()
-        );
+    public boolean existsById(Long id) {
+        return countryRepository.existsById(id);
     }
 }
