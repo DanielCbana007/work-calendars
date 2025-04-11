@@ -1,8 +1,6 @@
 package api.src.java.com.controllers;
 
-import application.src.main.java.com.services.CountryService;
 import domain.src.java.com.model.Country;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

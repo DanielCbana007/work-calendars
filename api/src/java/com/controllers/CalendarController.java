@@ -1,6 +1,5 @@
 package api.src.java.com.controllers;
 
-import application.src.main.java.com.services.CalendarService;
 import domain.src.java.com.model.Holiday;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,66 +1,48 @@
 package application.src.main.java.com.services;
 
+import com.repositories.TypeRepository;
 import domain.src.java.com.model.Type;
-import infrastructure.src.main.java.com.entities.TypeEntity;
-import infrastructure.src.main.java.com.repositories.TypeEntityRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Service
 public class TypeService {
 
-    private TypeEntityRepository typeEntityRepository;
+    private final TypeRepository typeRepository;
 
-    public Type createType(Type type) {
-        TypeEntity typeEntity = mapToEntity(type);
-        typeEntity = typeEntityRepository.save(typeEntity);
-        return mapToModel(typeEntity);
+    public TypeService(TypeRepository typeRepository) {
+        this.typeRepository = typeRepository;
     }
 
-    public List<Type> getAllTypes() {
-        List<TypeEntity> typeEntities = typeEntityRepository.findAll();
-        return typeEntities.stream()
-                .map(this::mapToModel)
-                .collect(Collectors.toList());
+    public Type createType(Type type) {
+        return typeRepository.save(type);
     }
 
     public Optional<Type> getTypeById(Long id) {
-        Optional<TypeEntity> typeEntity = typeEntityRepository.findById(id);
-        return typeEntity.map(this::mapToModel);
+        return typeRepository.findById(id);
     }
 
-    public Type updateType(Long id, Type type) {
-        if (typeEntityRepository.existsById(id)) {
-            TypeEntity typeEntity = mapToEntity(type);
-            typeEntity.setId(id);
-            typeEntity = typeEntityRepository.save(typeEntity);
-            return mapToModel(typeEntity);
+    public List<Type> getAllTypes() {
+        return typeRepository.findAll();
+    }
+
+    public Type updateType(Type type) {
+        if (typeRepository.existsById(type.getId())) {
+            return typeRepository.update(type);
+        } else {
+            throw new IllegalArgumentException("Type not found");
         }
-        return null;
     }
 
     public void deleteType(Long id) {
-        typeEntityRepository.deleteById(id);
+        if (typeRepository.existsById(id)) {
+            typeRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Type not found");
+        }
     }
 
-    private Type mapToModel(TypeEntity typeEntity) {
-        return new Type(
-                typeEntity.getId(),
-                typeEntity.getType()
-        );
-    }
-
-    private TypeEntity mapToEntity(Type type) {
-        return new TypeEntity(
-                type.getId(),
-                type.getType()
-        );
+    public boolean existsByName(String name) {
+        return typeRepository.existsByName(name);
     }
 }
