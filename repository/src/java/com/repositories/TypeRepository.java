@@ -1,4 +1,4 @@
-package com.repositories;
+package src.java.com.repositories;
 
 import domain.src.java.com.model.Type;
 
